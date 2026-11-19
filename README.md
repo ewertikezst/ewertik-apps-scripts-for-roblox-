@@ -1,4 +1,3 @@
-readme_text = """
 # 🚀 Ewerk Team - Official Projects
 
 **Desarrollador Principal:** `ewertik sig ew`  
@@ -51,4 +50,3 @@ Un launcher personalizado con diseño moderno, íconos redondeados y menú desli
   <b>💻 Desarrollado por: ewertik sig ew</b><br>
   <b>🛡️ Ewertik Tung Tung Sahur Team © 2024</b>
 </p>
-"""
