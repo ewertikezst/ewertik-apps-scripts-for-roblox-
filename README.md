@@ -1,4 +1,3 @@
-readme_text = """
 # 🚀 Ewerk Team - Official Projects
 
 **Desarrollador Principal:** `ewertik sig ew`  
@@ -59,4 +58,5 @@ Launcher personalizado para Android.
 
 
   💻 Desarrollado por: ewertik sig ew
-  🛡️ Ewertik Tung Tung Sahur Team © 2026
+  
+🛡️ Ewertik Tung Tung Sahur Team © 2026
