@@ -1,0 +1,118 @@
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local Workspace = game:GetService("Workspace")
+local Camera = Workspace.CurrentCamera
+local LocalPlayer = Players.LocalPlayer
+
+local FOVCircle = Drawing.new("Circle")
+FOVCircle.Thickness = 1.5
+FOVCircle.NumSides = 60
+FOVCircle.Filled = false
+FOVCircle.Transparency = 1
+FOVCircle.Color = Color3.fromRGB(255, 0, 0)
+
+RunService.RenderStepped:Connect(function()
+    if UserInputService.TouchEnabled then
+        FOVCircle.Position = Camera.ViewportSize / 2
+    else
+        FOVCircle.Position = UserInputService:GetMouseLocation()
+    end
+    FOVCircle.Radius = _G.State.FOV
+    FOVCircle.Visible = _G.State.Aimbot or _G.State.SilentAim or _G.State.Wallbang or _G.State.TriggerBot
+end)
+
+local function getClosestMurderer()
+    local closestTarget = nil
+    local shortestDistance = _G.State.FOV
+    
+    for _, player in pairs(Players:GetPlayers()) do
+        if player ~= LocalPlayer and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+            local char = player.Character
+            local backpack = player:FindFirstChild("Backpack")
+            local isMurderer = false
+            
+            if (char and (char:FindFirstChild("Knife") or char:FindFirstChild("Darken"))) or (backpack and (backpack:FindFirstChild("Knife") or backpack:FindFirstChild("Darken"))) then
+                isMurderer = true
+            end
+            
+            if isMurderer then
+                local head = char:FindFirstChild("Head")
+                if head then
+                    local screenPos, onScreen = Camera:WorldToViewportPoint(head.Position)
+                    if onScreen then
+                        local dist = (Vector2.new(screenPos.X, screenPos.Y) - UserInputService:GetMouseLocation()).Magnitude
+                        if dist < shortestDistance then
+                            shortestDistance = dist
+                            closestTarget = head
+                        end
+                    end
+                end
+            end
+        end
+    end
+    return closestTarget
+end
+
+RunService.RenderStepped:Connect(function()
+    if _G.State.Aimbot then
+        local target = getClosestMurderer()
+        if target then
+            Camera.CFrame = CFrame.new(Camera.CFrame.Position, target.Position)
+        end
+    end
+end)
+
+RunService.RenderStepped:Connect(function()
+    if _G.State.AutoShoot or _G.State.TriggerBot then
+        local target = getClosestMurderer()
+        if target then
+            local dist = (Camera.CFrame.Position - target.Position).Magnitude
+            if dist <= _G.State.FOV then
+                local virtualMouse = game:GetService("VirtualUser")
+                virtualMouse:Button1Down(Vector2.new(0,0), Camera)
+                task.wait(0.05)
+                virtualMouse:Button1Up(Vector2.new(0,0), Camera)
+            end
+        end
+    end
+end)
+
+local oldIndex
+oldIndex = hookmetamethod(game, "__index", function(self, method)
+    if self == game.Players.LocalPlayer:GetMouse() and method == "Hit" then
+        if _G.State.SilentAim or _G.State.Wallbang then
+            local target = getClosestMurderer()
+            if target then
+                return CFrame.new(target.Position)
+            end
+        end
+    end
+    return oldIndex(self, method)
+end)
+
+RunService.Heartbeat:Connect(function()
+    if _G.State.AutoThrow or _G.State.ThrowAimbot or _G.State.KillAll then
+        local ReplicatedStorage = game:GetService("ReplicatedStorage")
+        local Remotes = ReplicatedStorage:FindFirstChild("Remotes")
+        
+        if Remotes and Remotes:FindFirstChild("KnifeSys") and Remotes.KnifeSys:FindFirstChild("Attack") then
+            if _G.State.KillAll then
+                for _, p in pairs(Players:GetPlayers()) do
+                    if p ~= LocalPlayer and p.Character and p.Character:FindFirstChild("HumanoidRootPart") then
+                        pcall(function()
+                            Remotes.KnifeSys.Attack:FireServer(p.Character.HumanoidRootPart)
+                        end)
+                    end
+                end
+            elseif _G.State.AutoThrow or _G.State.ThrowAimbot then
+                local target = getClosestMurderer()
+                if target and target.Parent then
+                    pcall(function()
+                        Remotes.KnifeSys.Attack:FireServer(target)
+                    end)
+                end
+            end
+        end
+    end
+end) 
