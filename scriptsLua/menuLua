@@ -1,0 +1,85 @@
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local Workspace = game:GetService("Workspace")
+local Camera = Workspace.CurrentCamera
+local LocalPlayer = Players.LocalPlayer
+
+local LocalizationService = game:GetService("LocalizationService")
+local Locale = LocalizationService.SystemLocaleId
+local Lang = "es"
+
+if string.find(Locale, "es") then Lang = "es"
+elseif string.find(Locale, "pt") then Lang = "pt"
+elseif string.find(Locale, "fr") then Lang = "fr"
+elseif string.find(Locale, "de") then Lang = "de"
+else Lang = "en" end
+
+local Texts = {
+    es = { Main = "Principal", Sheriff = "Sheriff", Murder = "Murder", Speed = "Velocidad", Jump = "Salto", Gravity = "Gravedad", FlySpeed = "Velocidad Fly", Noclip = "Noclip", SilentAim = "Silent Aim", Aimbot = "Aimbot", TriggerBot = "Trigger Bot", Prediction = "Predicción", AutoShoot = "Auto Disparo", Wallbang = "Wallbang (Paredes)", FOV = "Tamaño FOV", ThrowAimbot = "Aimbot Cuchillo", AutoThrow = "Auto Lanzar", KillAll = "Matar a Todos" },
+    en = { Main = "Main", Sheriff = "Sheriff", Murder = "Murder", Speed = "Speed", Jump = "Jump", Gravity = "Gravity", FlySpeed = "Fly Speed", Noclip = "Noclip", SilentAim = "Silent Aim", Aimbot = "Aimbot", TriggerBot = "Trigger Bot", Prediction = "Prediction", AutoShoot = "Auto Shoot", Wallbang = "Wallbang", FOV = "FOV Size", ThrowAimbot = "Throw Aimbot", AutoThrow = "Auto Throw", KillAll = "Kill All" },
+    pt = { Main = "Principal", Sheriff = "Sheriff", Murder = "Murder", Speed = "Velocidade", Jump = "Pulo", Gravity = "Gravidade", FlySpeed = "Velocidade Voo", Noclip = "Noclip", SilentAim = "Silent Aim", Aimbot = "Aimbot", TriggerBot = "Trigger Bot", Prediction = "Previsão", AutoShoot = "Auto Tiro", Wallbang = "Wallbang", FOV = "Tamanho FOV", ThrowAimbot = "Aimbot Faca", AutoThrow = "Auto Arremessar", KillAll = "Matar Todos" }
+}
+
+local function T(key)
+    if Texts[Lang] and Texts[Lang][key] then return Texts[Lang][key] end
+    return Texts["en"][key] or key
+end
+
+local BG = Instance.new("ScreenGui")
+BG.Name = "EwertikBackground"
+BG.ResetOnSpawn = false
+BG.Parent = game.CoreGui
+
+local BGImage = Instance.new("ImageLabel", BG)
+BGImage.Size = UDim2.new(1, 0, 1, 0)
+BGImage.Image = "rbxassetid://93133808994911"
+BGImage.BackgroundTransparency = 1
+BGImage.ImageTransparency = 0.4
+BGImage.ScaleType = Enum.ScaleType.Crop
+BGImage.ZIndex = 0
+
+local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
+
+local Window = WindUI:CreateWindow({
+    Title = "ewertik ewl | MM2",
+    Author = "Ewerk Team",
+    Folder = "EwertikMM2",
+    Size = UDim2.fromOffset(550, 400),
+    Transparent = true,
+    Theme = "Dark",
+    SidebarWidth = 150
+})
+
+_G.State = {
+    SilentAim = false, Aimbot = false, TriggerBot = false, AutoShoot = false,
+    Prediction = false, Wallbang = false,
+    AutoThrow = false, ThrowAimbot = false, KillAll = false,
+    FOV = 120
+}
+
+local TabMain = Window:Tab({ Title = T("Main") })
+
+TabMain:Slider({ Title = T("Speed"), Step = 1, Value = { Min = 16, Max = 7000, Default = 16 }, Callback = function(val) if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then LocalPlayer.Character.Humanoid.WalkSpeed = val end end })
+TabMain:Slider({ Title = T("Jump"), Step = 1, Value = { Min = 50, Max = 500, Default = 50 }, Callback = function(val) if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then LocalPlayer.Character.Humanoid.JumpPower = val end end })
+TabMain:Slider({ Title = T("Gravity"), Step = 1, Value = { Min = 10, Max = 196, Default = 196 }, Callback = function(val) Workspace.Gravity = val end })
+TabMain:Slider({ Title = T("FlySpeed"), Step = 1, Value = { Min = 10, Max = 500, Default = 50 }, Callback = function(val) _G.State.FlySpeed = val end })
+TabMain:Toggle({ Title = T("Noclip"), Default = false, Callback = function(state) RunService.Stepped:Connect(function() if state and LocalPlayer.Character then for _, v in pairs(LocalPlayer.Character:GetDescendants()) do if v:IsA("BasePart") then v.CanCollide = false end end end end) end })
+
+local TabSheriff = Window:Tab({ Title = T("Sheriff") })
+
+TabSheriff:Toggle({ Title = T("SilentAim"), Default = false, Callback = function(v) _G.State.SilentAim = v end })
+TabSheriff:Toggle({ Title = T("TriggerBot"), Default = false, Callback = function(v) _G.State.TriggerBot = v end })
+TabSheriff:Toggle({ Title = T("Aimbot"), Default = false, Callback = function(v) _G.State.Aimbot = v end })
+TabSheriff:Toggle({ Title = T("Prediction"), Default = false, Callback = function(v) _G.State.Prediction = v end })
+TabSheriff:Toggle({ Title = T("AutoShoot"), Default = false, Callback = function(v) _G.State.AutoShoot = v end })
+TabSheriff:Toggle({ Title = T("Wallbang"), Default = false, Callback = function(v) _G.State.Wallbang = v end })
+TabSheriff:Slider({ Title = T("FOV"), Step = 1, Value = { Min = 50, Max = 500, Default = 120 }, Callback = function(val) _G.State.FOV = val end })
+
+local TabMurder = Window:Tab({ Title = T("Murder") })
+
+TabMurder:Toggle({ Title = T("ThrowAimbot"), Default = false, Callback = function(v) _G.State.ThrowAimbot = v end })
+TabMurder:Toggle({ Title = T("AutoThrow"), Default = false, Callback = function(v) _G.State.AutoThrow = v end })
+TabMurder:Toggle({ Title = T("KillAll"), Default = false, Callback = function(v) _G.State.KillAll = v end })
+
+WindUI:Notify({ Title = "Ewertik EWL", Content = "Menu cargado.", Duration = 5 }) 
