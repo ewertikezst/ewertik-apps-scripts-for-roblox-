@@ -1,1 +1,175 @@
-local _a=game:GetService(string.char(80,108,97,121,101,114,115))local _b=game:GetService(string.char(82,117,110,83,101,114,118,105,99,101))local _c=game:GetService(string.char(85,115,101,114,73,110,112,117,116,83,101,114,118,105,99,101))local _d=game:GetService(string.char(87,111,114,107,115,112,97,99,101))local _e=_d.CurrentCamera local _f=_a.LocalPlayer local _g=game:GetService(string.char(76,111,99,97,108,105,122,97,116,105,111,110,83,101,114,118,105,99,101))local _h=_g.SystemLocaleId local _i=string.char(101,115)if string.find(_h,string.char(101,115))then _i=string.char(101,115)elseif string.find(_h,string.char(112,116))then _i=string.char(112,116)elseif string.find(_h,string.char(102,114))then _i=string.char(102,114)else _i=string.char(101,110)end local _j={es={Main=string.char(80,114,105,110,99,105,112,97,108),Sheriff=string.char(83,104,101,114,105,102,102),Murder=string.char(77,117,114,100,101,114),Speed=string.char(86,101,108,111,99,105,100,97,100),Jump=string.char(83,97,108,116,111),Gravity=string.char(71,114,97,118,101,100,97,100),Noclip=string.char(78,111,99,108,105,112),SilentAim=string.char(83,105,108,101,110,116,32,65,105,109),Aimbot=string.char(65,105,109,98,111,116),TriggerBot=string.char(84,114,105,103,103,101,114,32,66,111,116),AutoShoot=string.char(65,117,116,111,32,68,105,115,112,97,114,111),Wallbang=string.char(87,97,108,108,98,97,110,103),FOV=string.char(84,97,109,97,195,177,111,32,70,79,86),ThrowAimbot=string.char(65,105,109,98,111,116,32,67,117,99,104,105,108,108,111),AutoThrow=string.char(65,117,116,111,32,76,97,110,122,97,114),KillAll=string.char(77,97,116,97,114,32,97,32,84,111,100,111,115)},en={Main=string.char(77,97,105,110),Sheriff=string.char(83,104,101,114,105,102,102),Murder=string.char(77,117,114,100,101,114),Speed=string.char(83,112,101,101,100),Jump=string.char(74,117,109,112),Gravity=string.char(71,114,97,118,105,116,121),Noclip=string.char(78,111,99,108,105,112),SilentAim=string.char(83,105,108,101,110,116,32,65,105,109),Aimbot=string.char(65,105,109,98,111,116),TriggerBot=string.char(84,114,105,103,103,101,114,32,66,111,116),AutoShoot=string.char(65,117,116,111,32,83,104,111,111,116),Wallbang=string.char(87,97,108,108,98,97,110,103),FOV=string.char(70,79,86,32,83,105,122,101),ThrowAimbot=string.char(84,104,114,111,119,32,65,105,109,98,111,116),AutoThrow=string.char(65,117,116,111,32,84,104,114,111,119),KillAll=string.char(75,105,108,108,32,65,108,108)},pt={Main=string.char(80,114,105,110,99,105,112,97,108),Sheriff=string.char(83,104,101,114,105,102,102),Murder=string.char(77,117,114,100,101,114),Speed=string.char(86,101,108,111,99,105,100,97,100,101),Jump=string.char(80,117,108,111),Gravity=string.char(71,114,97,118,105,100,97,100,101),Noclip=string.char(78,111,99,108,105,112),SilentAim=string.char(83,105,108,101,110,116,32,65,105,109),Aimbot=string.char(65,105,109,98,111,116),TriggerBot=string.char(84,114,105,103,103,101,114,32,66,111,116),AutoShoot=string.char(65,117,116,111,32,84,105,114,111),Wallbang=string.char(87,97,108,108,98,97,110,103),FOV=string.char(84,97,109,97,110,104,111,32,70,79,86),ThrowAimbot=string.char(65,105,109,98,111,116,32,70,97,99,97),AutoThrow=string.char(65,117,116,111,32,65,114,114,101,109,101,115,115,97,114),KillAll=string.char(77,97,116,97,114,32,84,111,100,111,115)}}local function _k(_l)if _j[_i]and _j[_i][_l]then return _j[_i][_l]end return _j[string.char(101,110)][_l]or _l end local _m=loadstring(game:HttpGet((string.char(104,116,116,112,115,58,47,47,103,105,116,104,117,98,46,99,111,109,47,70,111,111,116,97,103,101,115,117,115,47,87,105,110,100,85,73,47,114,101,108,101,97,115,101,115,47,108,97,116,101,115,116,47,100,111,119,110,108,111,97,100,47,109,97)..string.char(105,110,46,108,117,97))))()local _n=_m:CreateWindow({Title=string.char(101,119,101,114,116,105,107,32,101,119,108,32,124,32,77,77,50),Author=string.char(69,119,101,114,107,32,84,101,97,109),Folder=string.char(69,119,101,114,116,105,107,77,77,50),Size=UDim2.fromOffset(550,400),Transparent=false,Theme=string.char(68,97,114,107),SidebarWidth=150})_G.State={SilentAim=false,Aimbot=false,TriggerBot=false,AutoShoot=false,Wallbang=false,AutoThrow=false,ThrowAimbot=false,KillAll=false,FOV=120}local _o=_n:Tab({Title=_k(string.char(77,97,105,110))})_o:Slider({Title=_k(string.char(83,112,101,101,100)),Step=1,Value={Min=16,Max=7000,Default=16},Callback=function(_p)if _f.Character and _f.Character:FindFirstChild(string.char(72,117,109,97,110,111,105,100))then _f.Character.Humanoid.WalkSpeed=_p end end})_o:Slider({Title=_k(string.char(74,117,109,112)),Step=1,Value={Min=50,Max=500,Default=50},Callback=function(_q)if _f.Character and _f.Character:FindFirstChild(string.char(72,117,109,97,110,111,105,100))then _f.Character.Humanoid.JumpPower=_q end end})_o:Slider({Title=_k(string.char(71,114,97,118,105,116,121)),Step=1,Value={Min=10,Max=196,Default=196},Callback=function(_r)_d.Gravity=_r end})_o:Toggle({Title=_k(string.char(78,111,99,108,105,112)),Default=false,Callback=function(_s)_b.Stepped:Connect(function()if _s and _f.Character then for _t,_u in pairs(_f.Character:GetDescendants())do if _u:IsA(string.char(66,97,115,101,80,97,114,116))then _u.CanCollide=false end end end end)end})local _v=_n:Tab({Title=_k(string.char(83,104,101,114,105,102,102))})_v:Toggle({Title=_k(string.char(83,105,108,101,110,116,65,105,109)),Default=false,Callback=function(_w)_G.State.SilentAim=_w end})_v:Toggle({Title=_k(string.char(84,114,105,103,103,101,114,66,111,116)),Default=false,Callback=function(_x)_G.State.TriggerBot=_x end})_v:Toggle({Title=_k(string.char(65,105,109,98,111,116)),Default=false,Callback=function(_y)_G.State.Aimbot=_y end})_v:Toggle({Title=_k(string.char(65,117,116,111,83,104,111,111,116)),Default=false,Callback=function(_z)_G.State.AutoShoot=_z end})_v:Toggle({Title=_k(string.char(87,97,108,108,98,97,110,103)),Default=false,Callback=function(_A)_G.State.Wallbang=_A end})_v:Slider({Title=_k(string.char(70,79,86)),Step=1,Value={Min=50,Max=500,Default=120},Callback=function(_B)_G.State.FOV=_B end})local _C=_n:Tab({Title=_k(string.char(77,117,114,100,101,114))})_C:Toggle({Title=_k(string.char(84,104,114,111,119,65,105,109,98,111,116)),Default=false,Callback=function(_D)_G.State.ThrowAimbot=_D end})_C:Toggle({Title=_k(string.char(65,117,116,111,84,104,114,111,119)),Default=false,Callback=function(_E)_G.State.AutoThrow=_E end})_C:Toggle({Title=_k(string.char(75,105,108,108,65,108,108)),Default=false,Callback=function(_F)_G.State.KillAll=_F end})local _H=Drawing.new(string.char(67,105,114,99,108,101))_H.Thickness=1.5 _H.NumSides=60 _H.Filled=false _H.Transparency=1 _H.Color=Color3.fromRGB(255,0,0)_b.RenderStepped:Connect(function()if _c.TouchEnabled then _H.Position=_e.ViewportSize/2 else _H.Position=_c:GetMouseLocation()end _H.Radius=_G.State.FOV _H.Visible=_G.State.Aimbot or _G.State.SilentAim or _G.State.Wallbang or _G.State.TriggerBot end)local function _I()local _J=nil local _K=_G.State.FOV local _L=_c.TouchEnabled and(_e.ViewportSize/2)or _c:GetMouseLocation()for _M,_N in pairs(_a:GetPlayers())do if _N~=_f and _N.Character and _N.Character:FindFirstChild(string.char(72,117,109,97,110,111,105,100,82,111,111,116,80,97,114,116))then local _O=_N.Character local _P=_N:FindFirstChild(string.char(66,97,99,107,112,97,99,107))local _Q=false if(_O and(_O:FindFirstChild(string.char(75,110,105,102,101))or _O:FindFirstChild(string.char(68,97,114,107,101,110))))or(_P and(_P:FindFirstChild(string.char(75,110,105,102,101))or _P:FindFirstChild(string.char(68,97,114,107,101,110))))then _Q=true end if _Q then local _R=_O:FindFirstChild(string.char(72,101,97,100))if _R then local _S,_T=_e:WorldToViewportPoint(_R.Position)if _T then local _U=(Vector2.new(_S.X,_S.Y)-_L).Magnitude if _U<_K then _K=_U _J=_R end end end end end end return _J end _b.RenderStepped:Connect(function()if _G.State.Aimbot then local _V=_I()if _V then _e.CFrame=CFrame.new(_e.CFrame.Position,_V.Position)end end end)_b.RenderStepped:Connect(function()if _G.State.AutoShoot or _G.State.TriggerBot then local _W=_I()if _W then local _X=(_e.CFrame.Position-_W.Position).Magnitude if _X<=_G.State.FOV then local _Y=game:GetService(string.char(86,105,114,116,117,97,108,85,115,101,114))_Y:Button1Down(Vector2.new(0,0),_e)task.wait(0.05)_Y:Button1Up(Vector2.new(0,0),_e)end end end end)local _Z pcall(function()_Z=hookmetamethod(game,string.char(95,95,105,110,100,101,120),function(_ba,_bb)if _ba==game.Players.LocalPlayer:GetMouse()and _bb==string.char(72,105,116)then if _G.State.SilentAim or _G.State.Wallbang then local _bc=_I()if _bc then return CFrame.new(_bc.Position)end end end return _Z(_ba,_bb)end)end)_b.Heartbeat:Connect(function()if _G.State.AutoThrow or _G.State.ThrowAimbot or _G.State.KillAll then local _bd=game:GetService(string.char(82,101,112,108,105,99,97,116,101,100,83,116,111,114,97,103,101))local _be=_bd:FindFirstChild(string.char(82,101,109,111,116,101,115))if _be and _be:FindFirstChild(string.char(75,110,105,102,101,83,121,115))and _be.KnifeSys:FindFirstChild(string.char(65,116,116,97,99,107))then if _G.State.KillAll then for _bf,_bg in pairs(_a:GetPlayers())do if _bg~=_f and _bg.Character and _bg.Character:FindFirstChild(string.char(72,117,109,97,110,111,105,100,82,111,111,116,80,97,114,116))then pcall(function()_be.KnifeSys.Attack:FireServer(_bg.Character.HumanoidRootPart)end)end end task.wait(0.5)elseif _G.State.AutoThrow or _G.State.ThrowAimbot then local _bh=_I()if _bh and _bh.Parent then pcall(function()_be.KnifeSys.Attack:FireServer(_bh)end)task.wait(0.5)end end end end end) 
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local Workspace = game:GetService("Workspace")
+local Camera = Workspace.CurrentCamera
+local LocalPlayer = Players.LocalPlayer
+
+local LocalizationService = game:GetService("LocalizationService")
+local Locale = LocalizationService.SystemLocaleId
+local Lang = "es"
+
+if string.find(Locale, "es") then Lang = "es"
+elseif string.find(Locale, "pt") then Lang = "pt"
+elseif string.find(Locale, "fr") then Lang = "fr"
+else Lang = "en" end
+
+local Texts = {
+    es = { Main = "Principal", Sheriff = "Sheriff", Murder = "Murder", Speed = "Velocidad", Jump = "Salto", Gravity = "Gravedad", Noclip = "Noclip", SilentAim = "Silent Aim", Aimbot = "Aimbot", TriggerBot = "Trigger Bot", AutoShoot = "Auto Disparo", Wallbang = "Wallbang", FOV = "Tamaño FOV", ThrowAimbot = "Aimbot Cuchillo", AutoThrow = "Auto Lanzar", KillAll = "Matar a Todos" },
+    en = { Main = "Main", Sheriff = "Sheriff", Murder = "Murder", Speed = "Speed", Jump = "Jump", Gravity = "Gravity", Noclip = "Noclip", SilentAim = "Silent Aim", Aimbot = "Aimbot", TriggerBot = "Trigger Bot", AutoShoot = "Auto Shoot", Wallbang = "Wallbang", FOV = "FOV Size", ThrowAimbot = "Throw Aimbot", AutoThrow = "Auto Throw", KillAll = "Kill All" },
+    pt = { Main = "Principal", Sheriff = "Sheriff", Murder = "Murder", Speed = "Velocidade", Jump = "Pulo", Gravity = "Gravidade", Noclip = "Noclip", SilentAim = "Silent Aim", Aimbot = "Aimbot", TriggerBot = "Trigger Bot", AutoShoot = "Auto Tiro", Wallbang = "Wallbang", FOV = "Tamanho FOV", ThrowAimbot = "Aimbot Faca", AutoThrow = "Auto Arremessar", KillAll = "Matar Todos" }
+}
+
+local function T(key)
+    if Texts[Lang] and Texts[Lang][key] then return Texts[Lang][key] end
+    return Texts["en"][key] or key
+end
+
+local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
+
+local Window = WindUI:CreateWindow({
+    Title = "ewertik ewl | MM2",
+    Author = "Ewerk Team",
+    Folder = "EwertikMM2",
+    Size = UDim2.fromOffset(550, 400),
+    Transparent = false, -- Desactivado para evitar crashes de memoria
+    Theme = "Dark",
+    SidebarWidth = 150
+})
+
+_G.State = {
+    SilentAim = false, Aimbot = false, TriggerBot = false, AutoShoot = false,
+    Wallbang = false, AutoThrow = false, ThrowAimbot = false, KillAll = false,
+    FOV = 120
+}
+
+local TabMain = Window:Tab({ Title = T("Main") })
+TabMain:Slider({ Title = T("Speed"), Step = 1, Value = { Min = 16, Max = 7000, Default = 16 }, Callback = function(val) if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then LocalPlayer.Character.Humanoid.WalkSpeed = val end end })
+TabMain:Slider({ Title = T("Jump"), Step = 1, Value = { Min = 50, Max = 500, Default = 50 }, Callback = function(val) if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then LocalPlayer.Character.Humanoid.JumpPower = val end end })
+TabMain:Slider({ Title = T("Gravity"), Step = 1, Value = { Min = 10, Max = 196, Default = 196 }, Callback = function(val) Workspace.Gravity = val end })
+TabMain:Toggle({ Title = T("Noclip"), Default = false, Callback = function(state) RunService.Stepped:Connect(function() if state and LocalPlayer.Character then for _, v in pairs(LocalPlayer.Character:GetDescendants()) do if v:IsA("BasePart") then v.CanCollide = false end end end end) end })
+
+local TabSheriff = Window:Tab({ Title = T("Sheriff") })
+TabSheriff:Toggle({ Title = T("SilentAim"), Default = false, Callback = function(v) _G.State.SilentAim = v end })
+TabSheriff:Toggle({ Title = T("TriggerBot"), Default = false, Callback = function(v) _G.State.TriggerBot = v end })
+TabSheriff:Toggle({ Title = T("Aimbot"), Default = false, Callback = function(v) _G.State.Aimbot = v end })
+TabSheriff:Toggle({ Title = T("AutoShoot"), Default = false, Callback = function(v) _G.State.AutoShoot = v end })
+TabSheriff:Toggle({ Title = T("Wallbang"), Default = false, Callback = function(v) _G.State.Wallbang = v end })
+TabSheriff:Slider({ Title = T("FOV"), Step = 1, Value = { Min = 50, Max = 500, Default = 120 }, Callback = function(val) _G.State.FOV = val end })
+
+local TabMurder = Window:Tab({ Title = T("Murder") })
+TabMurder:Toggle({ Title = T("ThrowAimbot"), Default = false, Callback = function(v) _G.State.ThrowAimbot = v end })
+TabMurder:Toggle({ Title = T("AutoThrow"), Default = false, Callback = function(v) _G.State.AutoThrow = v end })
+TabMurder:Toggle({ Title = T("KillAll"), Default = false, Callback = function(v) _G.State.KillAll = v end })
+
+local FOVCircle = Drawing.new("Circle")
+FOVCircle.Thickness = 1.5
+FOVCircle.NumSides = 60
+FOVCircle.Filled = false
+FOVCircle.Transparency = 1
+FOVCircle.Color = Color3.fromRGB(255, 0, 0)
+
+RunService.RenderStepped:Connect(function()
+    if UserInputService.TouchEnabled then FOVCircle.Position = Camera.ViewportSize / 2
+    else FOVCircle.Position = UserInputService:GetMouseLocation() end
+    FOVCircle.Radius = _G.State.FOV
+    FOVCircle.Visible = _G.State.Aimbot or _G.State.SilentAim or _G.State.Wallbang or _G.State.TriggerBot
+end)
+
+local function getClosestMurderer()
+    local closestTarget = nil
+    local shortestDistance = _G.State.FOV
+    local centerPoint = UserInputService.TouchEnabled and (Camera.ViewportSize / 2) or UserInputService:GetMouseLocation()
+    
+    for _, player in pairs(Players:GetPlayers()) do
+        if player ~= LocalPlayer and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+            local char = player.Character
+            local backpack = player:FindFirstChild("Backpack")
+            local isMurderer = false
+            
+            if (char and (char:FindFirstChild("Knife") or char:FindFirstChild("Darken"))) or (backpack and (backpack:FindFirstChild("Knife") or backpack:FindFirstChild("Darken"))) then
+                isMurderer = true
+            end
+            
+            if isMurderer then
+                local head = char:FindFirstChild("Head")
+                if head then
+                    local screenPos, onScreen = Camera:WorldToViewportPoint(head.Position)
+                    if onScreen then
+                        local dist = (Vector2.new(screenPos.X, screenPos.Y) - centerPoint).Magnitude
+                        if dist < shortestDistance then
+                            shortestDistance = dist
+                            closestTarget = head
+                        end
+                    end
+                end
+            end
+        end
+    end
+    return closestTarget
+end
+
+RunService.RenderStepped:Connect(function()
+    if _G.State.Aimbot then
+        local target = getClosestMurderer()
+        if target then Camera.CFrame = CFrame.new(Camera.CFrame.Position, target.Position) end
+    end
+end)
+
+RunService.RenderStepped:Connect(function()
+    if _G.State.AutoShoot or _G.State.TriggerBot then
+        local target = getClosestMurderer()
+        if target then
+            local dist = (Camera.CFrame.Position - target.Position).Magnitude
+            if dist <= _G.State.FOV then
+                local virtualMouse = game:GetService("VirtualUser")
+                virtualMouse:Button1Down(Vector2.new(0,0), Camera)
+                task.wait(0.05)
+                virtualMouse:Button1Up(Vector2.new(0,0), Camera)
+            end
+        end
+    end
+end)
+
+-- Hook protegido para evitar Crash
+local oldIndex
+pcall(function()
+    oldIndex = hookmetamethod(game, "__index", function(self, method)
+        if self == game.Players.LocalPlayer:GetMouse() and method == "Hit" then
+            if _G.State.SilentAim or _G.State.Wallbang then
+                local target = getClosestMurderer()
+                if target then return CFrame.new(target.Position) end
+            end
+        end
+        return oldIndex(self, method)
+    end)
+end)
+
+-- Kill All y Auto Throw con Delay (Anti-Crash)
+RunService.Heartbeat:Connect(function()
+    if _G.State.AutoThrow or _G.State.ThrowAimbot or _G.State.KillAll then
+        local ReplicatedStorage = game:GetService("ReplicatedStorage")
+        local Remotes = ReplicatedStorage:FindFirstChild("Remotes")
+        
+        if Remotes and Remotes:FindFirstChild("KnifeSys") and Remotes.KnifeSys:FindFirstChild("Attack") then
+            if _G.State.KillAll then
+                for _, p in pairs(Players:GetPlayers()) do
+                    if p ~= LocalPlayer and p.Character and p.Character:FindFirstChild("HumanoidRootPart") then
+                        pcall(function()
+                            Remotes.KnifeSys.Attack:FireServer(p.Character.HumanoidRootPart)
+                        end)
+                    end
+                end
+                task.wait(0.5) -- 🛑 EVITA EL CRASH POR SPAM AL SERVIDOR
+            elseif _G.State.AutoThrow or _G.State.ThrowAimbot then
+                local target = getClosestMurderer()
+                if target and target.Parent then
+                    pcall(function()
+                        Remotes.KnifeSys.Attack:FireServer(target)
+                    end)
+                    task.wait(0.5) -- 🛑 EVITA EL CRASH
+                end
+            end
+        end
+    end
+end)
