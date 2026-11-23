@@ -1,0 +1,224 @@
+local Rayfield = loadstring(game:HttpGet("https://sirius.menu/gen2"))()
+
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local Workspace = game:GetService("Workspace")
+local Camera = Workspace.CurrentCamera
+local LocalPlayer = Players.LocalPlayer
+
+
+local State = {
+    Aimbot = false, SilentAim = false, TriggerBot = false, AutoShoot = false, Wallbang = false,
+    AutoThrow = false, KillAll = false,
+    FOV = 120
+}
+
+-- Crear Ventana (Sintaxis Gen 2)
+local Window = Rayfield:CreateWindow({
+    Name = "Ewertik EWL | Professional",
+    Subtitle = "by Ewerk Team",
+    SidebarLayout = true, -- Estilo Gen 2
+    Theme = "Cobalt", -- Tema moderno
+    LoadingTitle = "Cargando Script...",
+    LoadingSubtitle = "Preparando la interfaz...",
+    ConfigurationSaving = { Enabled = true, FolderName = "EwertikMM2", FileName = "Config" },
+    KeySystem = false
+})
+
+
+local TabMain = Window:Tab({ Title = "main" })
+
+TabMain:Slider({
+    Name = "Velocidad", Range = {16, 7000}, Increment = 1, Suffix = " ws",
+    CurrentValue = 16, Flag = "Speed",
+    Callback = function(Value) 
+        if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then 
+            LocalPlayer.Character.Humanoid.WalkSpeed = Value 
+        end 
+    end,
+})
+
+TabMain:Slider({
+    Name = "Salto", Range = {50, 500}, Increment = 1, Suffix = " jp",
+    CurrentValue = 50, Flag = "Jump",
+    Callback = function(Value) 
+        if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then 
+            LocalPlayer.Character.Humanoid.JumpPower = Value 
+        end 
+    end,
+})
+
+TabMain:Slider({
+    Name = "Gravedad", Range = {10, 196}, Increment = 1, Suffix = " grav",
+    CurrentValue = 196, Flag = "Gravity",
+    Callback = function(Value) Workspace.Gravity = Value end,
+})
+
+TabMain:Toggle({
+    Name = "Noclip", CurrentValue = false, Flag = "Noclip",
+    Callback = function(Value)
+        RunService.Stepped:Connect(function()
+            if Value and LocalPlayer.Character then
+                for _, v in pairs(LocalPlayer.Character:GetDescendants()) do
+                    if v:IsA("BasePart") then v.CanCollide = false end
+                end
+            end
+        end)
+    end,
+})
+
+
+local TabSheriff = Window:Tab({ Title = "Sheriff" })
+
+TabSheriff:Toggle({ Name = "Silent Aim", CurrentValue = false, Flag = "SilentAim", Callback = function(Value) State.SilentAim = Value end })
+TabSheriff:Toggle({ Name = "Aimbot", CurrentValue = false, Flag = "Aimbot", Callback = function(Value) State.Aimbot = Value end })
+TabSheriff:Toggle({ Name = "Trigger Bot", CurrentValue = false, Flag = "TriggerBot", Callback = function(Value) State.TriggerBot = Value end })
+TabSheriff:Toggle({ Name = "Auto Shoot", CurrentValue = false, Flag = "AutoShoot", Callback = function(Value) State.AutoShoot = Value end })
+TabSheriff:Toggle({ Name = "Wallbang (Paredes)", CurrentValue = false, Flag = "Wallbang", Callback = function(Value) State.Wallbang = Value end })
+
+TabSheriff:Slider({
+    Name = "Tamaño FOV", Range = {50, 500}, Increment = 1, Suffix = " px",
+    CurrentValue = 120, Flag = "FOV",
+    Callback = function(Value) State.FOV = Value end,
+})
+
+
+
+local TabMurder = Window:Tab({ Title = "Murder" })
+
+TabMurder:Toggle({ Name = "Auto Lanzar Cuchillo", CurrentValue = false, Flag = "AutoThrow", Callback = function(Value) State.AutoThrow = Value end })
+TabMurder:Toggle({ Name = "Matar a Todos (Kill All)", CurrentValue = false, Flag = "KillAll", Callback = function(Value) State.KillAll = Value end })
+
+
+
+-- 1. FOV Circle Seguro
+local FOVCircle = Drawing.new("Circle")
+FOVCircle.Thickness = 1.5
+FOVCircle.NumSides = 60
+FOVCircle.Filled = false
+FOVCircle.Transparency = 1
+FOVCircle.Color = Color3.fromRGB(0, 255, 255)
+
+RunService.RenderStepped:Connect(function()
+    pcall(function()
+        if UserInputService.TouchEnabled then 
+            FOVCircle.Position = Camera.ViewportSize / 2
+        else 
+            FOVCircle.Position = UserInputService:GetMouseLocation() 
+        end
+        FOVCircle.Radius = State.FOV
+        FOVCircle.Visible = State.Aimbot or State.SilentAim or State.Wallbang or State.TriggerBot
+    end)
+end)
+
+-- 2. Buscar al Murderer (Detección Profesional)
+local function getClosestMurderer()
+    local closestTarget = nil
+    local shortestDistance = State.FOV
+    local center = UserInputService.TouchEnabled and (Camera.ViewportSize / 2) or UserInputService:GetMouseLocation()
+    
+    for _, player in pairs(Players:GetPlayers()) do
+        if player ~= LocalPlayer and player.Character then
+            local char = player.Character
+            local bp = player:FindFirstChild("Backpack")
+            local isMurderer = false
+            
+            if (char:FindFirstChild("Knife") or char:FindFirstChild("Darken")) or 
+               (bp and (bp:FindFirstChild("Knife") or bp:FindFirstChild("Darken"))) then
+                isMurderer = true
+            end
+            
+            if isMurderer then
+                local head = char:FindFirstChild("Head")
+                if head then
+                    local screenPos, onScreen = Camera:WorldToViewportPoint(head.Position)
+                    if onScreen then
+                        local dist = (Vector2.new(screenPos.X, screenPos.Y) - center).Magnitude
+                        if dist < shortestDistance then
+                            shortestDistance = dist
+                            closestTarget = head
+                        end
+                    end
+                end
+            end
+        end
+    end
+    return closestTarget
+end
+
+-- 3. Aimbot Seguro (Sin crasheos de cámara)
+RunService.RenderStepped:Connect(function()
+    pcall(function()
+        if State.Aimbot then
+            local target = getClosestMurderer()
+            if target then
+                Camera.CFrame = Camera.CFrame:Lerp(CFrame.new(Camera.CFrame.Position, target.Position), 0.2)
+            end
+        end
+    end)
+end)
+
+-- 4. Silent Aim & Wallbang (Método de Gancho Seguro)
+local oldIndex
+pcall(function()
+    oldIndex = hookmetamethod(game, "__index", function(self, method)
+        if self == game.Players.LocalPlayer:GetMouse() and method == "Hit" then
+            if (State.SilentAim or State.Wallbang) then
+                local target = getClosestMurderer()
+                if target then
+                    return CFrame.new(target.Position)
+                end
+            end
+        end
+        return oldIndex(self, method)
+    end)
+end)
+
+-- 5. Auto Shoot / Trigger Bot (Con Delay anti-Kick)
+task.spawn(function()
+    while task.wait(0.1) do
+        pcall(function()
+            if State.AutoShoot or State.TriggerBot then
+                local target = getClosestMurderer()
+                if target then
+                    local virtualMouse = game:GetService("VirtualUser")
+                    virtualMouse:Button1Down(Vector2.new(0,0), Camera)
+                    task.wait(0.05)
+                    virtualMouse:Button1Up(Vector2.new(0,0), Camera)
+                end
+            end
+        end)
+    end
+end)
+
+-- 6. Lanzar Cuchillo / Kill All (Con Delay anti-Crash)
+task.spawn(function()
+    while task.wait(0.5) do
+        pcall(function()
+            if State.AutoThrow or State.KillAll then
+                local Remotes = game:GetService("ReplicatedStorage"):FindFirstChild("Remotes")
+                if Remotes and Remotes:FindFirstChild("KnifeSys") then
+                    if State.KillAll then
+                        for _, p in pairs(Players:GetPlayers()) do
+                            if p ~= LocalPlayer and p.Character and p.Character:FindFirstChild("HumanoidRootPart") then
+                                Remotes.KnifeSys.Attack:FireServer(p.Character.HumanoidRootPart)
+                            end
+                        end
+                    elseif State.AutoThrow then
+                        local target = getClosestMurderer()
+                        if target then
+                            Remotes.KnifeSys.Attack:FireServer(target)
+                        end
+                    end
+                end
+            end
+        end)
+    end
+end)
+
+Rayfield:Notify({
+    Title = "Ewertik ggs",
+    Content = "welcome to ewertik ggs ewertikScripts",
+    Duration = 5,
+}) 
