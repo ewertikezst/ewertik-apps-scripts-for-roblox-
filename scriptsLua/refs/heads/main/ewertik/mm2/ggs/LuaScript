@@ -1,0 +1,213 @@
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
+local Window = Library.CreateLib("ewertik ggs", "DarkTheme")
+
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local Workspace = game:GetService("Workspace")
+local LocalPlayer = Players.LocalPlayer
+local Camera = Workspace.CurrentCamera
+
+local State = {
+    AntiFling = false, AntiVoid = false, AntiTrap = false,
+    Aimbot = false, SilentAim = false, FOV = 120
+}
+
+local MainTab = Window:NewTab("Principal")
+local MainSection = MainTab:NewSection("Movimiento y Protección")
+
+MainSection:NewSlider("Velocidad", "Ajusta la velocidad de caminar", 250, 16, function(s) if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then LocalPlayer.Character.Humanoid.WalkSpeed = s end end)
+MainSection:NewSlider("Salto", "Ajusta la fuerza de salto", 500, 50, function(s) if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then LocalPlayer.Character.Humanoid.JumpPower = s end end)
+MainSection:NewSlider("Gravedad", "Ajusta la gravedad del mundo", 196, 10, function(s) Workspace.Gravity = s end)
+MainSection:NewToggle("Noclip", "Atraviesa paredes", function(s) RunService.Stepped:Connect(function() if s and LocalPlayer.Character then for _, v in pairs(LocalPlayer.Character:GetDescendants()) do if v:IsA("BasePart") then v.CanCollide = false end end end end) end)
+MainSection:NewToggle("Anti-Fling", "Evita que otros jugadores te empujen", function(s) State.AntiFling = s end)
+MainSection:NewToggle("Anti-Void", "Te resucita si caes al vacío", function(s) State.AntiVoid = s end)
+MainSection:NewToggle("Anti-Trampa", "Rompe congelamientos o sentadas forzadas", function(s) State.AntiTrap = s end)
+
+local CombatTab = Window:NewTab("Combate")
+local CombatSection = CombatTab:NewSection("Aimbot y Disparos")
+
+CombatSection:NewToggle("Silent Aim", "Los disparos van a la cabeza sin mover la cámara", function(s) State.SilentAim = s end)
+CombatSection:NewToggle("Aimbot", "Mueve la cámara hacia el enemigo más cercano", function(s) State.Aimbot = s end)
+CombatSection:NewSlider("Tamaño FOV", "Radio de detección del aimbot", 500, 50, function(s) State.FOV = s end)
+
+local FlingTab = Window:NewTab("Fling")
+local FlingSection = FlingTab:NewSection("Lanzar Jugadores")
+
+FlingSection:NewButton("Fling Murder", "Lanza al asesino por los aires", function()
+    local target = nil
+    for _, p in pairs(Players:GetPlayers()) do
+        if p ~= LocalPlayer and p.Character then
+            local char = p.Character
+            local bp = p:FindFirstChild("Backpack")
+            if (char:FindFirstChild("Knife") or char:FindFirstChild("Darken")) or (bp and (bp:FindFirstChild("Knife") or bp:FindFirstChild("Darken"))) then target = p break end
+        end
+    end
+    if target and target.Character then
+        local hrp = target.Character:FindFirstChild("HumanoidRootPart")
+        if hrp then
+            local bv = Instance.new("BodyVelocity", hrp)
+            bv.Velocity = Vector3.new(0, 500, 0)
+            bv.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+            task.wait(0.2)
+            bv:Destroy()
+        end
+    end
+end)
+
+FlingSection:NewButton("Fling Sheriff", "Lanza al sheriff por los aires", function()
+    local target = nil
+    for _, p in pairs(Players:GetPlayers()) do
+        if p ~= LocalPlayer and p.Character then
+            local char = p.Character
+            local bp = p:FindFirstChild("Backpack")
+            if (char:FindFirstChild("Gun") or char:FindFirstChild("Revolver")) or (bp and (bp:FindFirstChild("Gun") or bp:FindFirstChild("Revolver"))) then target = p break end
+        end
+    end
+    if target and target.Character then
+        local hrp = target.Character:FindFirstChild("HumanoidRootPart")
+        if hrp then
+            local bv = Instance.new("BodyVelocity", hrp)
+            bv.Velocity = Vector3.new(0, 500, 0)
+            bv.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+            task.wait(0.2)
+            bv:Destroy()
+        end
+    end
+end)
+
+local MiscTab = Window:NewTab("Otros")
+local MiscSection = MiscTab:NewSection("Utilidades")
+
+MiscSection:NewButton("Copiar Discord", "Copia el enlace de Discord", function()
+    setclipboard("https://discord.gg/ujdExq35Ar")
+    Library:Notify("Enlace de Discord copiado", 3)
+end)
+
+MainSection:NewButton("Minimizar Menú", "Oculta el menú y muestra un icono flotante", function()
+    Library:ToggleUI()
+    FloatingIcon.Enabled = true
+end)
+
+local CoreGui = game:GetService("CoreGui")
+local FloatingIcon = Instance.new("ScreenGui")
+FloatingIcon.Name = "FloatingEwertikIcon"
+FloatingIcon.Parent = CoreGui
+FloatingIcon.Enabled = false
+
+local IconButton = Instance.new("ImageButton")
+IconButton.Parent = FloatingIcon
+IconButton.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+IconButton.BackgroundTransparency = 0.1
+IconButton.Position = UDim2.new(0, 10, 0.5, -25)
+IconButton.Size = UDim2.new(0, 50, 0, 50)
+IconButton.Image = "rbxassetid://3926307971"
+IconButton.ImageColor3 = Color3.fromRGB(255, 255, 255)
+IconButton.Draggable = true
+
+local dragging, dragInput, dragStart, startPos
+IconButton.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        dragging = true
+        dragStart = input.Position
+        startPos = IconButton.Position
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then dragging = false end
+        end)
+    end
+end)
+IconButton.InputChanged:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then dragInput = input end
+end)
+UserInputService.InputChanged:Connect(function(input)
+    if input == dragInput and dragging then
+        local delta = input.Position - dragStart
+        IconButton.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+    end
+end)
+IconButton.MouseButton1Click:Connect(function()
+    Library:ToggleUI()
+    FloatingIcon.Enabled = false
+end)
+
+task.spawn(function()
+    RunService.Heartbeat:Connect(function()
+        if State.AntiVoid and LocalPlayer.Character then
+            local hrp = LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+            if hrp and hrp.Position.Y < -50 then hrp.CFrame = CFrame.new(0, 50, 0) end
+        end
+    end)
+
+    RunService.Heartbeat:Connect(function()
+        if State.AntiTrap and LocalPlayer.Character then
+            local hum = LocalPlayer.Character:FindFirstChild("Humanoid")
+            if hum then
+                if hum.Sit then hum.Sit = false hum.Jump = true end
+                local hrp = LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+                if hrp and hrp.Anchored then hrp.Anchored = false hum.Jump = true end
+            end
+        end
+    end)
+
+    local FOVCircle
+    pcall(function() FOVCircle = Drawing.new("Circle") FOVCircle.Thickness = 1.5 FOVCircle.Color = Color3.fromRGB(0, 255, 255) FOVCircle.Filled = false end)
+    RunService.RenderStepped:Connect(function()
+        if FOVCircle then
+            FOVCircle.Position = UserInputService.TouchEnabled and (Camera.ViewportSize / 2) or UserInputService:GetMouseLocation()
+            FOVCircle.Radius = State.FOV
+            FOVCircle.Visible = State.Aimbot or State.SilentAim
+        end
+    end)
+
+    RunService.RenderStepped:Connect(function()
+        if State.Aimbot then
+            local closest, dist = nil, State.FOV
+            local center = UserInputService.TouchEnabled and (Camera.ViewportSize / 2) or UserInputService:GetMouseLocation()
+            for _, p in pairs(Players:GetPlayers()) do
+                if p ~= LocalPlayer and p.Character and p.Character:FindFirstChild("Head") then
+                    local screen, onScreen = Camera:WorldToViewportPoint(p.Character.Head.Position)
+                    if onScreen then
+                        local d = (Vector2.new(screen.X, screen.Y) - center).Magnitude
+                        if d < dist then dist = d closest = p.Character.Head end
+                    end
+                end
+            end
+            if closest then Camera.CFrame = Camera.CFrame:Lerp(CFrame.new(Camera.CFrame.Position, closest.Position), 0.2) end
+        end
+    end)
+
+    local oldIndex
+    pcall(function()
+        oldIndex = hookmetamethod(game, "__index", function(self, method)
+            if self == game.Players.LocalPlayer:GetMouse() and method == "Hit" and State.SilentAim then
+                local closest, dist = nil, State.FOV
+                local center = UserInputService.TouchEnabled and (Camera.ViewportSize / 2) or UserInputService:GetMouseLocation()
+                for _, p in pairs(Players:GetPlayers()) do
+                    if p ~= LocalPlayer and p.Character and p.Character:FindFirstChild("Head") then
+                        local screen, onScreen = Camera:WorldToViewportPoint(p.Character.Head.Position)
+                        if onScreen then
+                            local d = (Vector2.new(screen.X, screen.Y) - center).Magnitude
+                            if d < dist then dist = d closest = p.Character.Head end
+                        end
+                    end
+                end
+                if closest then return CFrame.new(closest.Position) end
+            end
+            return oldIndex(self, method)
+        end)
+    end)
+
+    RunService.Stepped:Connect(function()
+        if State.AntiFling and LocalPlayer.Character then
+            for _, p in pairs(Players:GetPlayers()) do
+                if p ~= LocalPlayer and p.Character then
+                    for _, part in pairs(p.Character:GetDescendants()) do
+                        if part:IsA("BasePart") then part.CanCollide = false end
+                    end
+                end
+            end
+        end
+    end)
+end)
+
+Library:Notify("ewertik ggs cargado correctamente", 5) 
