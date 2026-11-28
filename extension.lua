@@ -234,8 +234,3 @@ task.spawn(function()
 end)
 
 
--- ============================================================
--- AQUÍ ABAJO PUEDES PEGAR OTROS SCRIPTS
--- (NO repitas "local library, env = ...")
--- ============================================================
-
